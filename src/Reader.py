@@ -4,38 +4,49 @@ import os
 class Reader:
 
     aggression = [];
-    casualties = [];
-    productivity = [];
+    distribution = [];
     dead = [];
+    productivity = [];
     time = [];
 
     def read_files(self, folderpath):
-        filepaths = self.get_files(folderpath)
-        self.get_values(filepaths)
+        filepaths = self.gather_files(folderpath)
+        self.gather_values(filepaths)
 
-    def get_values(self, filepaths):
+    def gather_values(self, filepaths):
         for file in filepaths:
             aggression = -1
-            casualties = -1
-            productivity = -1
+            distribution = ""
             dead = -1
+            productivity = -1
+            time = -1
+
             logfile = open(file, "r").readlines()
             for line in logfile:
-                if "productivity" in line:
-                    productivity = line.split(":")[1]
-                if "casualties" in line:
-                    casualties = line.split(":")[1]
+                if "aggression" in line:
+                    aggression = line.split(":")[1]
+                if "distribution" in line:
+                    distribution = line.split(":")[1]
                 if "dead" in line:
                     dead = line.split(":")[1]
-            if not aggression == -1 and not productivity == -1 and not casualties == -1 and not dead == -1: #make sure our values have been assigned
-                self.productivity.append(productivity)
-                self.casualties.append(casualties)
+                if "productivity" in line:
+                    productivity = line.split(":")[1]
+                if "time" in line:
+                    time = line.split(":")[1]
+            # make sure our values have been assigned
+            if not aggression == -1 and not productivity == -1 and not dead == -1 and not time == -1 and distribution != "":
                 self.aggression.append(aggression)
+                self.distribution.append(distribution)
                 self.dead.append(dead)
+                self.productivity.append(productivity)
+                self.time.append(time)
 
-    def get_files(self, folderpath):
+    def gather_files(self, folderpath):
         filepaths = []
         for file in os.listdir(folderpath):
             if file.endswith(".LOG"):
                 filepaths.append(os.path.join(folderpath, file))
         return filepaths
+
+    def get_aggression(self):
+        return self.aggression
