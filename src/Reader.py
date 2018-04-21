@@ -3,18 +3,21 @@ import os
 
 class Reader:
 
-    aggression = [];
-    distribution = [];
-    dead = [];
-    productivity = [];
-    time = [];
+    aggression = []
+    distribution = []
+    dead = []
+    productivity = []
+    time = []
 
-    def read_files(self, folderpath):
-        filepaths = self.gather_files(folderpath)
-        self.gather_values(filepaths)
+    def __init__(self, path):
+        self.path = path + "\\output"
 
-    def gather_values(self, filepaths):
-        for file in filepaths:
+    def read_files(self):
+        paths = self.gather_files()
+        self.gather_values(paths)
+
+    def gather_values(self, paths):
+        for file in paths:
             aggression = -1
             distribution = ""
             dead = -1
@@ -41,12 +44,9 @@ class Reader:
                 self.productivity.append(productivity)
                 self.time.append(time)
 
-    def gather_files(self, folderpath):
-        filepaths = []
-        for file in os.listdir(folderpath):
+    def gather_files(self):
+        paths = []
+        for file in os.listdir(self.path):
             if file.endswith(".LOG"):
-                filepaths.append(os.path.join(folderpath, file))
-        return filepaths
-
-    def get_aggression(self):
-        return self.aggression
+                paths.append(os.path.join(self.path, file))
+        return paths
